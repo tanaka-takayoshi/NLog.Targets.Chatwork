@@ -1,6 +1,8 @@
 NLog.Targets.Chatwork
 =====================
 
+[![Build status](https://ci.appveyor.com/api/projects/status?id=ubcx0i351c34342a)](https://ci.appveyor.com/project/csharp-chatwork-api)
+
 NLogでChatworkに投稿するターゲット
 
 http://tech.tanaka733.net/entry/2013/12/12/nlog-tagets-chatwork
