@@ -18,8 +18,12 @@ namespace NLog.Targets.Chatwork
         [DefaultValue(3)]
         public int? Timeout { get; set; }
 
+        public string ToMembers { get; set; }
+
         private ChatworkClient client;
-            
+
+        private string ToHeader = "";
+         
         protected override void InitializeTarget()
         {
             base.InitializeTarget();
@@ -27,18 +31,40 @@ namespace NLog.Targets.Chatwork
             if (string.IsNullOrEmpty(Token))
             {
                 InternalLogger.Fatal("認証Tokenを指定してください");
-                return;;
+                return;
             }
 
             client = new ChatworkClient(Token)
             {
                 Timeout = TimeSpan.FromSeconds(Timeout ?? 3)
             };
+
+            if (!string.IsNullOrEmpty(ToMembers))
+            {
+                var contacts = client.Room.GetRoomMembersAsync(RoomId).Result;
+                foreach (var idText in ToMembers.Split(','))
+                {
+                    int id;
+                    if (int.TryParse(idText.Trim(), out id))
+                    {
+                        var contact = contacts.FirstOrDefault(c => c.account_id == id);
+                        if (contact != null)
+                        {
+                            ToHeader += string.Format("[To:{0}] {1}さん\r\n", id, contact.name);
+                        }
+                        else
+                        {
+                            InternalLogger.Warn("Id {0} は指定されたルームID {1}に存在しません", id, RoomId);
+                        }
+                    }
+                }
+            }
+            
         }
 
         protected override void Write(LogEventInfo logEvent)
         {
-            var logMessage = Layout.Render(logEvent);
+            var logMessage = ToHeader + Layout.Render(logEvent);
 
             try
             {
