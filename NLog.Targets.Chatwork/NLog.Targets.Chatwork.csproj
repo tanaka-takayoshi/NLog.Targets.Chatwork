@@ -32,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Chatwork.Service">
-      <HintPath>..\packages\Chatwork.Api.0.0.1\lib\portable-net45+sl5+wp8+win8\Chatwork.Service.dll</HintPath>
+    <Reference Include="Chatwork.Service, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Chatwork.Api.0.1.1\lib\portable-net45+sl5+wp8+win8\Chatwork.Service.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.165\lib\net45\Microsoft.Threading.Tasks.dll</HintPath>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>NLog.Targets.Chatwork</id>
+        <version>0.0.3</version>
+        <title>NLog Targets for Chatwork</title>
+        <authors>tanaka_733</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>NLog Targets for Chatwork</description>
+        <dependencies>
+            <dependency id="NLog" version="2.1.0" />
+            <dependency id="Chatwork.Api" version="0.1.1" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\NLog.Targets.Chatwork\bin\Release\NLog.Targets.Chatwork.dll" target="lib\net45\NLog.Targets.Chatwork.dll" />
+    </files>
+</package>
