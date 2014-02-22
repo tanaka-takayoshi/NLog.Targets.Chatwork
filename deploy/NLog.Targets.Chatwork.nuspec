@@ -13,6 +13,6 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="..\NLog.Targets.Chatwork\bin\Release\NLog.Targets.Chatwork.dll" target="lib\net45\NLog.Targets.Chatwork.dll" />
+        <file src="..\..\temp\NLog.Targets.Chatwork\NLog.Targets.Chatwork.dll" target="lib\net45\NLog.Targets.Chatwork.dll" />
     </files>
 </package>
