@@ -22,4 +22,4 @@ Write-Output "Building NuGet package"
 
 # publish NuGet package
 Write-Output "Publishing NuGet package"
-."$srcFolder\.nuget\NuGet.exe" push $srcFolder\Chatwork.Api.$projectVersion.nupkg $nugetApiKey
+."$srcFolder\.nuget\NuGet.exe" push $srcFolder\NLog.Targets.Chatwork.$projectVersion.nupkg $nugetApiKey
