@@ -31,6 +31,7 @@ namespace NLog.Targets.Chatwork
             if (string.IsNullOrEmpty(Token))
             {
                 InternalLogger.Fatal("認証Tokenを指定してください");
+                
                 return;
             }
 
@@ -42,6 +43,13 @@ namespace NLog.Targets.Chatwork
             if (!string.IsNullOrEmpty(ToMembers))
             {
                 var contacts = client.Room.GetRoomMembersAsync(RoomId).Result;
+                if (ToMembers.Equals("all", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    ToHeader = string.Join("\r",
+                        contacts.Select(c => string.Format("[To:{0}] {1}さん", c.account_id, c.name)))
+                        + "\r\r";
+                    return;
+                }
                 foreach (var idText in ToMembers.Split(','))
                 {
                     int id;
@@ -50,13 +58,17 @@ namespace NLog.Targets.Chatwork
                         var contact = contacts.FirstOrDefault(c => c.account_id == id);
                         if (contact != null)
                         {
-                            ToHeader += string.Format("[To:{0}] {1}さん\r\n", id, contact.name);
+                            ToHeader += string.Format("[To:{0}] {1}さん\r", id, contact.name);
                         }
                         else
                         {
                             InternalLogger.Warn("Id {0} は指定されたルームID {1}に存在しません", id, RoomId);
                         }
                     }
+                }
+                if (!string.IsNullOrEmpty(ToMembers))
+                {
+                    ToHeader += "\r";
                 }
             }
             
