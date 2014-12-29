@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Remoting.Lifetime;
 using System.Text;
 using System.Threading.Tasks;
 using Chatwork.Service;
@@ -20,10 +21,14 @@ namespace NLog.Targets.Chatwork
 
         public string ToMembers { get; set; }
 
+        [DefaultValue(1)]
+        public int MaxRetry { get; set; }
+
         private ChatworkClient client;
 
-        private string ToHeader = "";
-         
+        private Task<string> asyncTask;
+
+ 
         protected override void InitializeTarget()
         {
             base.InitializeTarget();
@@ -34,59 +39,87 @@ namespace NLog.Targets.Chatwork
                 
                 return;
             }
+            if (MaxRetry < 1)
+            {
+                InternalLogger.Fatal("MaxRetry は1以上の値を指定してください。1を指定します。");
+                MaxRetry = 1;
+            }
 
             client = new ChatworkClient(Token)
             {
                 Timeout = TimeSpan.FromSeconds(Timeout ?? 3)
             };
 
-            if (!string.IsNullOrEmpty(ToMembers))
+            asyncTask = GetHeaderAsync();
+        }
+
+        private async Task<string> GetHeaderAsync()
+        {
+            if (string.IsNullOrEmpty(ToMembers))
             {
-                var contacts = client.Room.GetRoomMembersAsync(RoomId).Result;
-                if (ToMembers.Equals("all", StringComparison.InvariantCultureIgnoreCase))
+                return "";
+            }
+            else
+            {
+                try
                 {
-                    ToHeader = string.Join("\r",
-                        contacts.Select(c => string.Format("[To:{0}] {1}さん", c.account_id, c.name)))
-                        + "\r\r";
-                    return;
-                }
-                foreach (var idText in ToMembers.Split(','))
-                {
-                    int id;
-                    if (int.TryParse(idText.Trim(), out id))
+                    var contacts = await client.Room.GetRoomMembersAsync(RoomId);
+                    if (!ToMembers.Equals("all", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var contact = contacts.FirstOrDefault(c => c.account_id == id);
-                        if (contact != null)
-                        {
-                            ToHeader += string.Format("[To:{0}] {1}さん\r", id, contact.name);
-                        }
-                        else
-                        {
-                            InternalLogger.Warn("Id {0} は指定されたルームID {1}に存在しません", id, RoomId);
-                        }
+                        contacts = contacts.Where(c => ToMembers.Contains(c.account_id.ToString())).ToList();
+                    }
+                    return string.Join("\r",
+                            contacts.Select(c => string.Format("[To:{0}] {1}さん", c.account_id, c.name)))
+                            + "\r\r";
+                }
+                catch (Exception e)
+                {
+                    InternalLogger.Fatal("Failed to load room members. Use id only: {0}", e);
+                    if (ToMembers.Equals("all", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return "";
+                    }
+                    else
+                    {
+                        return string.Join("\r",
+                                ToMembers.Split(',').Select(id => string.Format("[To:{0}] ", id)))
+                            + "\r\r";
                     }
                 }
-                if (!string.IsNullOrEmpty(ToMembers))
-                {
-                    ToHeader += "\r";
-                }
             }
-            
+        }
+
+        private string LoadHeader()
+        {
+            if (asyncTask.IsCompleted)
+            {
+                return asyncTask.Result;
+            }
+            InternalLogger.Fatal("TO 指定の読みこみ中、もしくは失敗しました");
+            return "";
         }
 
         protected override void Write(LogEventInfo logEvent)
         {
-            var logMessage = ToHeader + Layout.Render(logEvent);
+            var toHeader = LoadHeader();
+            var logMessage = toHeader + Layout.Render(logEvent);
 
-            try
+            Exception lastError = null;
+            for (var i = 0; i < MaxRetry; i++)
             {
-                var res = client.Room.SendMessgesAsync(RoomId, logMessage).Result;
-                InternalLogger.Debug("送信したメッセージID: {0}", res.message_id);
+                try
+                {
+                    var res = client.Room.SendMessgesAsync(RoomId, logMessage).Result;
+                    InternalLogger.Debug("送信したメッセージID: {0}", res.message_id);
+                    return;
+                }
+                catch (Exception e)
+                {
+                    lastError = e;
+                }
             }
-            catch (Exception e)
-            {
-                InternalLogger.Fatal(e.ToString());
-            }
+            InternalLogger.Fatal(lastError.ToString());
         }
     }
+
 }
