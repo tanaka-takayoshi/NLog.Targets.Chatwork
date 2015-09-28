@@ -28,7 +28,7 @@ namespace NLog.Targets.Chatwork
 
         private Task<string> asyncTask;
 
- 
+
         protected override void InitializeTarget()
         {
             base.InitializeTarget();
@@ -36,7 +36,7 @@ namespace NLog.Targets.Chatwork
             if (string.IsNullOrEmpty(Token))
             {
                 InternalLogger.Fatal("認証Tokenを指定してください");
-                
+
                 return;
             }
             if (MaxRetry < 1)
@@ -63,13 +63,13 @@ namespace NLog.Targets.Chatwork
             {
                 try
                 {
-                    var contacts = await client.Room.GetRoomMembersAsync(RoomId);
+                    var contacts = await client.Room.GetRoomMembersAsync(RoomId).ConfigureAwait(false);
                     if (!ToMembers.Equals("all", StringComparison.InvariantCultureIgnoreCase))
                     {
                         contacts = contacts.Where(c => ToMembers.Contains(c.account_id.ToString())).ToList();
                     }
                     return string.Join("\r",
-                            contacts.Select(c => string.Format("[To:{0}] {1}さん", c.account_id, c.name)))
+                            contacts.Select(c => $"[To:{c.account_id}] {c.name}さん"))
                             + "\r\r";
                 }
                 catch (Exception e)
@@ -82,26 +82,16 @@ namespace NLog.Targets.Chatwork
                     else
                     {
                         return string.Join("\r",
-                                ToMembers.Split(',').Select(id => string.Format("[To:{0}] ", id)))
+                                ToMembers.Split(',').Select(id => $"[To:{id}] "))
                             + "\r\r";
                     }
                 }
             }
         }
 
-        private string LoadHeader()
-        {
-            if (asyncTask.IsCompleted)
-            {
-                return asyncTask.Result;
-            }
-            InternalLogger.Fatal("TO 指定の読みこみ中、もしくは失敗しました");
-            return "";
-        }
-
         protected override void Write(LogEventInfo logEvent)
         {
-            var toHeader = LoadHeader();
+            var toHeader = asyncTask.Result;
             var logMessage = toHeader + Layout.Render(logEvent);
 
             Exception lastError = null;
@@ -117,8 +107,9 @@ namespace NLog.Targets.Chatwork
                 {
                     lastError = e;
                 }
+                Task.Delay(500).Wait();
             }
-            InternalLogger.Fatal(lastError.ToString());
+            InternalLogger.Fatal(lastError?.ToString() ?? "");
         }
     }
 

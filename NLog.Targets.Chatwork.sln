@@ -1,18 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLog.Targets.Chatwork", "NLog.Targets.Chatwork\NLog.Targets.Chatwork.csproj", "{FE217D22-679B-419D-9191-3AEC2227D467}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLog.Targets.Chatwork", "NLog.Targets.Chatwork\NLog.Targets.Chatwork.csproj", "{1A35AEFC-CFA9-4269-A787-6E1229A5FA9E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0F283AC6-E267-4FE3-916C-3ECA798DDAC0}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLog.Targets.Chatwork.ConsoleApp", "NLog.Targets.Chatwork.ConsoleApp\NLog.Targets.Chatwork.ConsoleApp.csproj", "{375F4862-EF1C-496E-944D-6E2CE0C04088}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLog.Targets.Chatwork.ConsoleApp", "NLog.Targets.Chatwork.ConsoleApp\NLog.Targets.Chatwork.ConsoleApp.csproj", "{7030E94C-BE01-4885-A6F0-5D5045B9809A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FE217D22-679B-419D-9191-3AEC2227D467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FE217D22-679B-419D-9191-3AEC2227D467}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FE217D22-679B-419D-9191-3AEC2227D467}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FE217D22-679B-419D-9191-3AEC2227D467}.Release|Any CPU.Build.0 = Release|Any CPU
-		{375F4862-EF1C-496E-944D-6E2CE0C04088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{375F4862-EF1C-496E-944D-6E2CE0C04088}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{375F4862-EF1C-496E-944D-6E2CE0C04088}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{375F4862-EF1C-496E-944D-6E2CE0C04088}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A35AEFC-CFA9-4269-A787-6E1229A5FA9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A35AEFC-CFA9-4269-A787-6E1229A5FA9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A35AEFC-CFA9-4269-A787-6E1229A5FA9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A35AEFC-CFA9-4269-A787-6E1229A5FA9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7030E94C-BE01-4885-A6F0-5D5045B9809A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7030E94C-BE01-4885-A6F0-5D5045B9809A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7030E94C-BE01-4885-A6F0-5D5045B9809A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7030E94C-BE01-4885-A6F0-5D5045B9809A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

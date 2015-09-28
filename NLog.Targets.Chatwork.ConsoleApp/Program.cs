@@ -10,8 +10,7 @@ namespace NLog.Targets.Chatwork.ConsoleApp
     {
         static void Main(string[] args)
         {
-            var log = LogManager.GetCurrentClassLogger();
-            log.Fatal("Fatal");
+            LogManager.GetCurrentClassLogger().Info(new string('1', 1000000));
         }
     }
 }
